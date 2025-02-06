@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Gestión de Autores</title>
+</h:head>
+
+<h:body>
+    <h1>Gestión de Autores</h1>
+
+    <!-- Formulario para agregar un nuevo autor -->
+    <h:form>
+        <h:panelGrid columns="2">
+            <h:outputLabel for="firstName" value="Nombre:" />
+            <h:inputText id="firstName" value="#{authorBean.author.firstName}" required="true"/>
+
+            <h:outputLabel for="lastName" value="Apellido:" />
+            <h:inputText id="lastName" value="#{authorBean.author.lastName}" required="true"/>
+
+            <h:outputLabel for="phone" value="Teléfono:" />
+            <h:inputText id="phone" value="#{authorBean.author.phone}" />
+
+            <h:outputLabel for="email" value="Email:" />
+            <h:inputText id="email" value="#{authorBean.author.email}" />
+
+            <h:commandButton value="Agregar Autor" action="#{authorBean.addAuthor}" />
+        </h:panelGrid>
+    </h:form>
+
+    <!-- Mensaje de confirmación -->
+    <h:outputText value="#{authorBean.message}" rendered="#{not empty authorBean.message}" style="color: green; font-weight: bold;"/>
+
+    <!-- Tabla para mostrar los autores -->
+    <h:dataTable value="#{authorBean.authors}" var="author" border="1">
+        <h:column>
+            <f:facet name="header">ID</f:facet>
+            #{author.id}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Nombre</f:facet>
+            #{author.firstName} #{author.lastName}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Teléfono</f:facet>
+            #{author.phone}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Email</f:facet>
+            #{author.email}
+        </h:column>
+    </h:dataTable>
+</h:body>
+
+</html>
