@@ -1,0 +1,47 @@
+package com.example.demo.model;
+
+import com.example.demo.entity.AuthorLiteraryGenre;
+import com.example.demo.entity.AuthorLiteraryGenreId;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+@Stateless
+public class AuthorLiteraryGenreModel {
+
+    private static final Logger LOGGER = Logger.getLogger(AuthorLiteraryGenreModel.class.getName());
+
+    @PersistenceContext(unitName = "AuthorsPU")
+    private EntityManager em;
+
+    public void createAssociation(AuthorLiteraryGenre association) {
+        try {
+            em.persist(association);
+            LOGGER.info("Asociación creada correctamente.");
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al crear la asociación.", e);
+        }
+    }
+
+    public List<AuthorLiteraryGenre> getAllAssociations() {
+        try {
+            return em.createQuery("SELECT al FROM AuthorLiteraryGenre al", AuthorLiteraryGenre.class)
+                    .getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al obtener las asociaciones.", e);
+            return null;
+        }
+    }
+
+    public AuthorLiteraryGenre findAssociation(AuthorLiteraryGenreId id) {
+        try {
+            return em.find(AuthorLiteraryGenre.class, id);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al buscar la asociación con ID " + id, e);
+            return null;
+        }
+    }
+}

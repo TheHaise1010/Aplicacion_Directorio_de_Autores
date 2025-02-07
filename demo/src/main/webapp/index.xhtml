@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
-    <title>Gestión de Autores</title>
+    <title>Gestión de Autores y Asociaciones</title>
 </h:head>
 <h:body>
-    <h1>Gestión de Autores</h1>
+    <h1>Agregar Autor y Asociar Género Literario</h1>
 
-    <!-- Formulario para agregar un nuevo autor -->
-    <h:form id="authorForm">
+    <h:form id="authorAssociationForm">
         <h:panelGrid columns="2">
             <h:outputLabel for="firstName" value="Nombre:" />
-            <h:inputText id="firstName" value="#{authorBean.author.firstName}" required="true"/>
+            <h:inputText id="firstName" value="#{authorBean.author.firstName}" required="true" />
 
             <h:outputLabel for="lastName" value="Apellido:" />
-            <h:inputText id="lastName" value="#{authorBean.author.lastName}" required="true"/>
+            <h:inputText id="lastName" value="#{authorBean.author.lastName}" required="true" />
 
             <h:outputLabel for="phone" value="Teléfono:" />
             <h:inputText id="phone" value="#{authorBean.author.phone}" />
@@ -24,7 +24,7 @@
             <h:outputLabel for="email" value="Email:" />
             <h:inputText id="email" value="#{authorBean.author.email}" />
 
-            <!-- Dropdown para listar los géneros literarios -->
+            <!-- Dropdown para seleccionar género literario -->
             <h:outputLabel for="genre" value="Género literario:" />
             <h:selectOneMenu id="genre" value="#{literaryGenreBean.selectedGenre}">
                 <f:selectItem itemLabel="Seleccione un género" itemValue="#{null}" />
@@ -33,34 +33,33 @@
                                itemValue="#{genre}"
                                itemLabel="#{genre.name}" />
             </h:selectOneMenu>
-            <br></br>
-            <br></br>
-            <h:commandButton value="Agregar Autor" action="#{authorBean.addAuthor}" />
         </h:panelGrid>
+        <!-- Al hacer clic en "Guardar", se creará la asociación en la tabla author_literarygenre -->
+        <h:commandButton value="Guardar" action="#{authorLiteraryGenreBean.addAssociation}" />
     </h:form>
 
     <!-- Mensaje de confirmación -->
-    <h:outputText value="#{authorBean.message}" rendered="#{not empty authorBean.message}"
+    <h:outputText value="#{authorLiteraryGenreBean.message}" rendered="#{not empty authorLiteraryGenreBean.message}"
                   style="color: green; font-weight: bold;" />
 
-    <br></br>
-    <!-- Tabla para mostrar los autores -->
-    <h:dataTable value="#{authorBean.authors}" var="author" border="1">
+    <h1>Listado de Asociaciones (Author - Género Literario)</h1>
+
+    <h:dataTable value="#{authorLiteraryGenreBean.associations}" var="assoc" border="1">
         <h:column>
-            <f:facet name="header">ID</f:facet>
-            #{author.id}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Nombre</f:facet>
-            #{author.firstName} #{author.lastName}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Teléfono</f:facet>
-            #{author.phone}
+            <f:facet name="header">Autor</f:facet>
+            #{assoc.author.firstName} #{assoc.author.lastName}
         </h:column>
         <h:column>
             <f:facet name="header">Email</f:facet>
-            #{author.email}
+            #{assoc.author.email}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Género Literario</f:facet>
+            #{assoc.literaryGenre.name}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Descripción</f:facet>
+            #{assoc.literaryGenre.description}
         </h:column>
     </h:dataTable>
 </h:body>

@@ -15,12 +15,22 @@ CREATE TABLE author (
     UNIQUE (first_name, last_name)              -- Para evitar autores con el mismo nombre y apellido
 );
 
+select * from author;
+delete from author where id in (1,2);
 -- Crear la tabla 'literarygenre'
 CREATE TABLE literarygenre (
     id INT AUTO_INCREMENT PRIMARY KEY,          -- ID único para cada género literario
     name VARCHAR(100) NOT NULL,                 -- Nombre del género literario
     description TEXT                            -- Descripción del género literario
 );
+
+INSERT INTO literarygenre (name, description) VALUES
+('Ficción', 'Obras narrativas basadas en la imaginación.'),
+('No Ficción', 'Obras basadas en hechos reales.'),
+('Misterio', 'Relatos que exploran el suspense y enigmas.'),
+('Fantasía', 'Narrativas con elementos mágicos o sobrenaturales.'),
+('Ciencia Ficción', 'Historias que exploran futuros y avances tecnológicos.');
+
 
 -- Relacionar las tablas 'author' y 'literarygenre' mediante una tabla intermedia
 -- Para representar la relación muchos a muchos entre autores y géneros literarios.
@@ -32,3 +42,8 @@ CREATE TABLE author_literarygenre (
     FOREIGN KEY (genre_id) REFERENCES literarygenre(id) ON DELETE CASCADE  -- Relación con 'literarygenre'
 );
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1234';
+
+SELECT user, host, plugin FROM mysql.user;
+
+SELECT user, host, authentication_string, plugin FROM mysql.user WHERE user = 'root';
+

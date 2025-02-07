@@ -2,7 +2,6 @@ package com.example.demo.bean;
 
 import com.example.demo.entity.Author;
 import com.example.demo.model.AuthorModel;
-
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -23,6 +22,7 @@ public class AuthorBean implements Serializable {
     private String message;
 
     public AuthorBean() {
+        // Se inicializa el autor para el formulario
         this.author = new Author();
     }
 
@@ -31,12 +31,26 @@ public class AuthorBean implements Serializable {
         loadAuthors();
     }
 
+    // Método original que persiste y luego reinicia el objeto
     public void addAuthor() {
-        author.setBirthDate(new Date()); // Asignamos una fecha por defecto
+        author.setBirthDate(new Date());
         authorModel.createAuthor(author);
         loadAuthors();
-        this.message = "✅ Autor agregado correctamente.";
-        this.author = new Author(); // Limpiar formulario después de agregar
+        message = "Autor agregado correctamente.";
+        // Reinicia el objeto (este método se usa en otros contextos)
+        this.author = new Author();
+    }
+
+    /**
+     * Método para persistir el autor sin reinicializarlo.
+     * Se usará en la asociación para que el objeto Author mantenga su ID asignado.
+     */
+    public void persistAuthor() {
+        author.setBirthDate(new Date());
+        authorModel.createAuthor(author);
+        loadAuthors();
+        message = "Autor agregado correctamente.";
+        // NO reiniciamos el objeto, para usarlo en la asociación.
     }
 
     private void loadAuthors() {
@@ -44,10 +58,6 @@ public class AuthorBean implements Serializable {
     }
 
     // Getters y Setters
-    public List<Author> getAuthors() {
-        return authors;
-    }
-
     public Author getAuthor() {
         return author;
     }
@@ -56,7 +66,19 @@ public class AuthorBean implements Serializable {
         this.author = author;
     }
 
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
+
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

@@ -16,14 +16,20 @@ public class LiteraryGenreBean implements Serializable {
     @Inject
     private LiteraryGenreModel genreModel;
 
+    // Para agregar un nuevo género
     private LiteraryGenre genre;
+
+    // Lista de géneros cargados desde la base de datos
     private List<LiteraryGenre> genres;
+
+    // Mensaje de confirmación u otro feedback
     private String message;
 
-    // Propiedad para enlazar la selección del dropdown
+    // Propiedad para enlazar la selección en el dropdown (aunque por ahora solo se use para mostrar)
     private LiteraryGenre selectedGenre;
 
     public LiteraryGenreBean() {
+        // Inicializamos la entidad para el formulario de nuevo género
         this.genre = new LiteraryGenre();
     }
 
@@ -32,18 +38,26 @@ public class LiteraryGenreBean implements Serializable {
         loadGenres();
     }
 
+    /**
+     * Agrega un nuevo género literario a la base de datos.
+     */
     public void addGenre() {
         genreModel.createGenre(genre);
         loadGenres();
         message = "Género literario agregado correctamente.";
-        genre = new LiteraryGenre(); // Limpiar formulario
+        // Reiniciamos la entidad para limpiar el formulario
+        genre = new LiteraryGenre();
     }
 
+    /**
+     * Carga la lista de géneros literarios.
+     */
     private void loadGenres() {
         genres = genreModel.getAllGenres();
     }
 
     // Getters y Setters
+
     public LiteraryGenre getGenre() {
         return genre;
     }
