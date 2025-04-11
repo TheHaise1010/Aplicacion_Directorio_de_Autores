@@ -37,7 +37,7 @@
         <h:commandButton value="Guardar" action="#{authorBean.addAuthor}" />
     </h:form>
 
-    <!-- Mensaje de confirmación -->
+    <!-- Mensaje -->
     <h:outputText value="#{authorBean.message}" rendered="#{not empty authorBean.message}"
                   style="color: green; font-weight: bold;" />
 
@@ -60,6 +60,12 @@
             <h:column>
                 <f:facet name="header">Género</f:facet>
                 #{author.literaryGenre.name}
+            </h:column>
+            <!-- Columna para el botón Borrar -->
+            <h:column>
+                <f:facet name="header">Borrar</f:facet>
+                <h:commandButton value="Borrar" action="#{authorBean.deleteAuthor(author)}"
+                                 onclick="if (!confirm('¿Está seguro de borrar este autor?')) return false;" />
             </h:column>
         </h:dataTable>
     </h:form>
