@@ -41,6 +41,13 @@ public class AuthorBean implements Serializable {
         this.author = new Author();
     }
 
+    public void deleteAuthor(Author author) {
+        authorModel.deleteAuthor(author);
+        loadAuthors(); // refresca la lista de autores
+        message = "Autor eliminado correctamente.";
+    }
+
+
     /**
      * Método para persistir el autor sin reinicializarlo.
      * Se usará en la asociación para que el objeto Author mantenga su ID asignado.

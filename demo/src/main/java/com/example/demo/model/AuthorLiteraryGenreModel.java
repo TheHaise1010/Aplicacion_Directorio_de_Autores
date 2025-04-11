@@ -26,6 +26,20 @@ public class AuthorLiteraryGenreModel {
         }
     }
 
+    public void deleteAssociation(AuthorLiteraryGenre association) {
+        try {
+            // Se obtiene la asociación administrada a partir de su clave compuesta
+            AuthorLiteraryGenre managedAssociation = em.find(AuthorLiteraryGenre.class, association.getId());
+            if (managedAssociation != null) {
+                em.remove(managedAssociation);
+            }
+        } catch(Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al eliminar la asociación.", e);
+            throw e; // Propagamos para que se aborte la transacción
+        }
+    }
+
+
     public List<AuthorLiteraryGenre> getAllAssociations() {
         try {
             return em.createQuery("SELECT al FROM AuthorLiteraryGenre al", AuthorLiteraryGenre.class)

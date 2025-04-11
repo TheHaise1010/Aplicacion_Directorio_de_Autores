@@ -10,6 +10,7 @@
 <h:body>
     <h1>Agregar Autor y Asociar Género Literario</h1>
 
+    <!-- Formulario para agregar la asociación (autor y género) -->
     <h:form id="authorAssociationForm">
         <h:panelGrid columns="2">
             <h:outputLabel for="firstName" value="Nombre:" />
@@ -34,7 +35,7 @@
                                itemLabel="#{genre.name}" />
             </h:selectOneMenu>
         </h:panelGrid>
-        <!-- Al hacer clic en "Guardar", se creará la asociación en la tabla author_literarygenre -->
+        <!-- Botón para guardar la asociación -->
         <h:commandButton value="Guardar" action="#{authorLiteraryGenreBean.addAssociation}" />
     </h:form>
 
@@ -44,23 +45,33 @@
 
     <h1>Listado de Asociaciones (Author - Género Literario)</h1>
 
-    <h:dataTable value="#{authorLiteraryGenreBean.associations}" var="assoc" border="1">
-        <h:column>
-            <f:facet name="header">Autor</f:facet>
-            #{assoc.author.firstName} #{assoc.author.lastName}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Email</f:facet>
-            #{assoc.author.email}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Género Literario</f:facet>
-            #{assoc.literaryGenre.name}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Descripción</f:facet>
-            #{assoc.literaryGenre.description}
-        </h:column>
-    </h:dataTable>
+    <!-- Se crea un formulario que envuelve la tabla de asociaciones para que el botón "Borrar" tenga un UIForm en su ascendencia -->
+    <h:form id="associationForm">
+        <h:dataTable value="#{authorLiteraryGenreBean.associations}" var="assoc" border="1">
+            <h:column>
+                <f:facet name="header">Autor</f:facet>
+                #{assoc.author.firstName} #{assoc.author.lastName}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Email</f:facet>
+                #{assoc.author.email}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Género Literario</f:facet>
+                #{assoc.literaryGenre.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripción</f:facet>
+                #{assoc.literaryGenre.description}
+            </h:column>
+            <!-- Columna de acciones -->
+            <h:column>
+                <f:facet name="header">Acciones</f:facet>
+                <h:commandButton value="Borrar"
+                                 action="#{authorLiteraryGenreBean.deleteAssociation(assoc)}"
+                                 onclick="if (!confirm('¿Está seguro de borrar?')) return false;" />
+            </h:column>
+        </h:dataTable>
+    </h:form>
 </h:body>
 </html>

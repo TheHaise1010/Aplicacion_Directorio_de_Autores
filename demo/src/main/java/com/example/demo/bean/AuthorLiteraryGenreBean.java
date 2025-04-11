@@ -63,6 +63,20 @@ public class AuthorLiteraryGenreBean implements Serializable {
         message = "Asociación creada correctamente.";
     }
 
+    /**
+     * Método que elimina la asociación entre un autor y un género literario.
+     * Se invoca desde la vista y recibe el objeto de asociación a eliminar.
+     */
+
+    public void deleteAssociation(AuthorLiteraryGenre association) {
+        // Elimina la asociación en la tabla author_literarygenre
+        associationModel.deleteAssociation(association);
+        // Elimina el autor; se asume que el autor no está asociado a otros géneros
+        authorBean.deleteAuthor(association.getAuthor());
+        loadAssociations();
+        message = "Asociación y autor eliminados correctamente.";
+    }
+
     private void loadAssociations() {
         associations = associationModel.getAllAssociations();
     }

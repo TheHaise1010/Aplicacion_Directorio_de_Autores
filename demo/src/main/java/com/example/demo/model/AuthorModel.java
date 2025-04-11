@@ -24,6 +24,21 @@ public class AuthorModel {
             LOGGER.log(Level.SEVERE, "❌ Error al guardar el autor.", e);
         }
     }
+    public void deleteAuthor(Author author) {
+        try {
+            // Se busca el autor en el contexto de persistencia
+            Author managedAuthor = em.find(Author.class, author.getId());
+            if(managedAuthor != null) {
+                // Remover el autor; si existen asociaciones en la tabla intermedia,
+                // se eliminarán automáticamente si has configurado ON DELETE CASCADE
+                em.remove(managedAuthor);
+            }
+        } catch(Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al eliminar el autor.", e);
+            throw e; // Propagar la excepción para que la transacción se aborte
+        }
+    }
+
 
     public List<Author> getAllAuthors() {
         try {
