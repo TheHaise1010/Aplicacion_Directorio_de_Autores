@@ -5,13 +5,12 @@
         xmlns:h="http://xmlns.jcp.org/jsf/html"
         xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
-    <title>Gestión de Autores y Asociaciones</title>
+    <title>Gestión de Autores y Géneros Literarios</title>
 </h:head>
 <h:body>
-    <h1>Agregar Autor y Asociar Género Literario</h1>
+    <h1>Agregar Autor</h1>
 
-    <!-- Formulario para agregar la asociación (autor y género) -->
-    <h:form id="authorAssociationForm">
+    <h:form id="authorForm">
         <h:panelGrid columns="2">
             <h:outputLabel for="firstName" value="Nombre:" />
             <h:inputText id="firstName" value="#{authorBean.author.firstName}" required="true" />
@@ -27,49 +26,40 @@
 
             <!-- Dropdown para seleccionar género literario -->
             <h:outputLabel for="genre" value="Género literario:" />
-            <h:selectOneMenu id="genre" value="#{literaryGenreBean.selectedGenre}">
+            <h:selectOneMenu id="genre" value="#{literaryGenreBean.selectedGenreId}">
                 <f:selectItem itemLabel="Seleccione un género" itemValue="#{null}" />
                 <f:selectItems value="#{literaryGenreBean.genres}"
                                var="genre"
-                               itemValue="#{genre}"
+                               itemValue="#{genre.id}"
                                itemLabel="#{genre.name}" />
             </h:selectOneMenu>
         </h:panelGrid>
-        <!-- Botón para guardar la asociación -->
-        <h:commandButton value="Guardar" action="#{authorLiteraryGenreBean.addAssociation}" />
+        <h:commandButton value="Guardar" action="#{authorBean.addAuthor}" />
     </h:form>
 
     <!-- Mensaje de confirmación -->
-    <h:outputText value="#{authorLiteraryGenreBean.message}" rendered="#{not empty authorLiteraryGenreBean.message}"
+    <h:outputText value="#{authorBean.message}" rendered="#{not empty authorBean.message}"
                   style="color: green; font-weight: bold;" />
 
-    <h1>Listado de Asociaciones (Author - Género Literario)</h1>
+    <h1>Listado de Autores</h1>
 
-    <!-- Se crea un formulario que envuelve la tabla de asociaciones para que el botón "Borrar" tenga un UIForm en su ascendencia -->
-    <h:form id="associationForm">
-        <h:dataTable value="#{authorLiteraryGenreBean.associations}" var="assoc" border="1">
+    <h:form id="listForm">
+        <h:dataTable value="#{authorBean.authors}" var="author" border="1">
             <h:column>
-                <f:facet name="header">Autor</f:facet>
-                #{assoc.author.firstName} #{assoc.author.lastName}
+                <f:facet name="header">ID</f:facet>
+                #{author.id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nombre</f:facet>
+                #{author.firstName} #{author.lastName}
             </h:column>
             <h:column>
                 <f:facet name="header">Email</f:facet>
-                #{assoc.author.email}
+                #{author.email}
             </h:column>
             <h:column>
-                <f:facet name="header">Género Literario</f:facet>
-                #{assoc.literaryGenre.name}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Descripción</f:facet>
-                #{assoc.literaryGenre.description}
-            </h:column>
-            <!-- Columna de acciones -->
-            <h:column>
-                <f:facet name="header">Acciones</f:facet>
-                <h:commandButton value="Borrar"
-                                 action="#{authorLiteraryGenreBean.deleteAssociation(assoc)}"
-                                 onclick="if (!confirm('¿Está seguro de borrar?')) return false;" />
+                <f:facet name="header">Género</f:facet>
+                #{author.literaryGenre.name}
             </h:column>
         </h:dataTable>
     </h:form>

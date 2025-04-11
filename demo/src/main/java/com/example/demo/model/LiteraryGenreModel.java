@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 @Stateless
 public class LiteraryGenreModel {
-
     private static final Logger LOGGER = Logger.getLogger(LiteraryGenreModel.class.getName());
 
     @PersistenceContext(unitName = "AuthorsPU")
@@ -19,9 +18,31 @@ public class LiteraryGenreModel {
     public void createGenre(LiteraryGenre genre) {
         try {
             em.persist(genre);
-            LOGGER.info("Género literario guardado correctamente.");
+            em.flush(); // Forzamos el flush para asignar el ID
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error al guardar el género literario.", e);
+            LOGGER.log(Level.SEVERE, "Error al crear género literario", e);
+            throw e;
+        }
+    }
+
+    public void updateGenre(LiteraryGenre genre) {
+        try {
+            em.merge(genre);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al actualizar género literario", e);
+            throw e;
+        }
+    }
+
+    public void deleteGenre(LiteraryGenre genre) {
+        try {
+            LiteraryGenre managed = em.find(LiteraryGenre.class, genre.getId());
+            if (managed != null) {
+                em.remove(managed);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al eliminar género literario", e);
+            throw e;
         }
     }
 
@@ -29,17 +50,17 @@ public class LiteraryGenreModel {
         try {
             return em.createQuery("SELECT g FROM LiteraryGenre g", LiteraryGenre.class).getResultList();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error al obtener la lista de géneros literarios.", e);
-            return null;
+            LOGGER.log(Level.SEVERE, "Error al obtener géneros", e);
+            throw e;
         }
     }
 
-    public LiteraryGenre findGenreById(Long id) {
+    public LiteraryGenre findGenreById(Integer id) {
         try {
             return em.find(LiteraryGenre.class, id);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error al buscar el género literario con ID " + id, e);
-            return null;
+            LOGGER.log(Level.SEVERE, "Error al buscar género por ID", e);
+            throw e;
         }
     }
 }

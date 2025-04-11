@@ -1,16 +1,15 @@
 package com.example.demo.model;
 
 import com.example.demo.entity.Author;
-
 import javax.ejb.Stateless;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Stateless
 public class AuthorModel {
-
     private static final Logger LOGGER = Logger.getLogger(AuthorModel.class.getName());
 
     @PersistenceContext(unitName = "AuthorsPU")
@@ -19,42 +18,49 @@ public class AuthorModel {
     public void createAuthor(Author author) {
         try {
             em.persist(author);
-            LOGGER.info("✅ Autor guardado correctamente en la base de datos.");
+            em.flush(); // Forzamos para asignar el ID
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "❌ Error al guardar el autor.", e);
-        }
-    }
-    public void deleteAuthor(Author author) {
-        try {
-            // Se busca el autor en el contexto de persistencia
-            Author managedAuthor = em.find(Author.class, author.getId());
-            if(managedAuthor != null) {
-                // Remover el autor; si existen asociaciones en la tabla intermedia,
-                // se eliminarán automáticamente si has configurado ON DELETE CASCADE
-                em.remove(managedAuthor);
-            }
-        } catch(Exception e) {
-            LOGGER.log(Level.SEVERE, "Error al eliminar el autor.", e);
-            throw e; // Propagar la excepción para que la transacción se aborte
+            LOGGER.log(Level.SEVERE, "Error al crear autor", e);
+            throw e;
         }
     }
 
+    public void updateAuthor(Author author) {
+        try {
+            em.merge(author);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al actualizar autor", e);
+            throw e;
+        }
+    }
+
+    public void deleteAuthor(Author author) {
+        try {
+            Author managed = em.find(Author.class, author.getId());
+            if (managed != null) {
+                em.remove(managed);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al eliminar autor", e);
+            throw e;
+        }
+    }
 
     public List<Author> getAllAuthors() {
         try {
             return em.createQuery("SELECT a FROM Author a", Author.class).getResultList();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "❌ Error al obtener la lista de autores.", e);
-            return null;
+            LOGGER.log(Level.SEVERE, "Error al obtener autores", e);
+            throw e;
         }
     }
 
-    public Author findAuthorById(Long id) {
+    public Author findAuthorById(Integer id) {
         try {
             return em.find(Author.class, id);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "❌ Error al buscar el autor con ID " + id, e);
-            return null;
+            LOGGER.log(Level.SEVERE, "Error al buscar autor por ID", e);
+            throw e;
         }
     }
 }

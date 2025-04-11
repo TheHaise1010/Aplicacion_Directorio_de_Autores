@@ -1,7 +1,9 @@
 package com.example.demo.bean;
 
 import com.example.demo.entity.Author;
+import com.example.demo.entity.LiteraryGenre;
 import com.example.demo.model.AuthorModel;
+import com.example.demo.model.LiteraryGenreModel;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -17,47 +19,53 @@ public class AuthorBean implements Serializable {
     @Inject
     private AuthorModel authorModel;
 
-    private Author author;
+    @Inject
+    private LiteraryGenreModel genreModel;
+
+    // Inyectamos el bean de LiteraryGenre para obtener selectedGenreId
+    @Inject
+    private LiteraryGenreBean literaryGenreBean;
+
+    private Author author = new Author();
     private List<Author> authors;
     private String message;
-
-    public AuthorBean() {
-        // Se inicializa el autor para el formulario
-        this.author = new Author();
-    }
 
     @PostConstruct
     public void init() {
         loadAuthors();
     }
 
-    // Método original que persiste y luego reinicia el objeto
     public void addAuthor() {
+        // Establecer la fecha de nacimiento (ejemplo: la fecha actual)
         author.setBirthDate(new Date());
+
+        // Si se seleccionó un género, buscar el objeto LiteraryGenre correspondiente
+        if (literaryGenreBean.getSelectedGenreId() != null) {
+            LiteraryGenre selectedGenre = genreModel.findGenreById(literaryGenreBean.getSelectedGenreId());
+            author.setLiteraryGenre(selectedGenre);
+        } else {
+            // En caso de que no se haya seleccionado género, se puede asignar null o manejarlo según la lógica
+            author.setLiteraryGenre(null);
+        }
+
+        // Persistir el autor y forzar el flush para que se asigne el ID
         authorModel.createAuthor(author);
         loadAuthors();
         message = "Autor agregado correctamente.";
-        // Reinicia el objeto (este método se usa en otros contextos)
-        this.author = new Author();
+        // Reiniciar el formulario
+        author = new Author();
+    }
+
+    public void updateAuthor() {
+        authorModel.updateAuthor(author);
+        loadAuthors();
+        message = "Autor actualizado correctamente.";
     }
 
     public void deleteAuthor(Author author) {
         authorModel.deleteAuthor(author);
-        loadAuthors(); // refresca la lista de autores
-        message = "Autor eliminado correctamente.";
-    }
-
-
-    /**
-     * Método para persistir el autor sin reinicializarlo.
-     * Se usará en la asociación para que el objeto Author mantenga su ID asignado.
-     */
-    public void persistAuthor() {
-        author.setBirthDate(new Date());
-        authorModel.createAuthor(author);
         loadAuthors();
-        message = "Autor agregado correctamente.";
-        // NO reiniciamos el objeto, para usarlo en la asociación.
+        message = "Autor eliminado correctamente.";
     }
 
     private void loadAuthors() {

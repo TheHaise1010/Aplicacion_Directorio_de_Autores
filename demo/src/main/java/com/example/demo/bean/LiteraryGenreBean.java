@@ -16,48 +16,35 @@ public class LiteraryGenreBean implements Serializable {
     @Inject
     private LiteraryGenreModel genreModel;
 
-    // Para agregar un nuevo género
-    private LiteraryGenre genre;
+    // Objeto para agregar un nuevo género (opcional)
+    private LiteraryGenre genre = new LiteraryGenre();
 
-    // Lista de géneros cargados desde la base de datos
+    // Lista de géneros
     private List<LiteraryGenre> genres;
 
-    // Mensaje de confirmación u otro feedback
+    // Mensaje
     private String message;
 
-    // Propiedad para enlazar la selección en el dropdown (aunque por ahora solo se use para mostrar)
-    private LiteraryGenre selectedGenre;
-
-    public LiteraryGenreBean() {
-        // Inicializamos la entidad para el formulario de nuevo género
-        this.genre = new LiteraryGenre();
-    }
+    // Propiedad para la selección en el dropdown (almacena el ID del género)
+    private Integer selectedGenreId;
 
     @PostConstruct
     public void init() {
         loadGenres();
     }
 
-    /**
-     * Agrega un nuevo género literario a la base de datos.
-     */
     public void addGenre() {
         genreModel.createGenre(genre);
         loadGenres();
         message = "Género literario agregado correctamente.";
-        // Reiniciamos la entidad para limpiar el formulario
         genre = new LiteraryGenre();
     }
 
-    /**
-     * Carga la lista de géneros literarios.
-     */
     private void loadGenres() {
         genres = genreModel.getAllGenres();
     }
 
     // Getters y Setters
-
     public LiteraryGenre getGenre() {
         return genre;
     }
@@ -82,11 +69,11 @@ public class LiteraryGenreBean implements Serializable {
         this.message = message;
     }
 
-    public LiteraryGenre getSelectedGenre() {
-        return selectedGenre;
+    public Integer getSelectedGenreId() {
+        return selectedGenreId;
     }
 
-    public void setSelectedGenre(LiteraryGenre selectedGenre) {
-        this.selectedGenre = selectedGenre;
+    public void setSelectedGenreId(Integer selectedGenreId) {
+        this.selectedGenreId = selectedGenreId;
     }
 }

@@ -5,12 +5,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "author")
+@Table(name = "author", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"first_name", "last_name"})
+})
 public class Author implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;
@@ -28,24 +30,31 @@ public class Author implements Serializable {
     @Column(name = "email", length = 100)
     private String email;
 
-    // Constructors
+    // Relación ManyToOne: cada autor tiene un género literario
+    @ManyToOne
+    @JoinColumn(name = "literary_genre_id")
+    private LiteraryGenre literaryGenre;
+
+    // Constructor sin parámetros
     public Author() {
     }
 
-    public Author(String firstName, String lastName, Date birthDate, String phone, String email) {
+    // Constructor con parámetros (opcional)
+    public Author(String firstName, String lastName, Date birthDate, String phone, String email, LiteraryGenre literaryGenre) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.phone = phone;
         this.email = email;
+        this.literaryGenre = literaryGenre;
     }
 
-    // Getters and Setters
-    public Long getId() {
+    // Getters y Setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -87,5 +96,13 @@ public class Author implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LiteraryGenre getLiteraryGenre() {
+        return literaryGenre;
+    }
+
+    public void setLiteraryGenre(LiteraryGenre literaryGenre) {
+        this.literaryGenre = literaryGenre;
     }
 }
