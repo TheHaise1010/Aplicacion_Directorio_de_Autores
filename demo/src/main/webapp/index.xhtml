@@ -8,7 +8,7 @@
     <title>Gestión de Autores y Géneros Literarios</title>
 </h:head>
 <h:body>
-    <h1>Agregar Autor</h1>
+    <h1>Agregar/Editar Autor</h1>
 
     <h:form id="authorForm">
         <h:panelGrid columns="2">
@@ -37,7 +37,7 @@
         <h:commandButton value="Guardar" action="#{authorBean.addAuthor}" />
     </h:form>
 
-    <!-- Mensaje -->
+    <!-- Mensaje de confirmación o error -->
     <h:outputText value="#{authorBean.message}" rendered="#{not empty authorBean.message}"
                   style="color: green; font-weight: bold;" />
 
@@ -61,7 +61,10 @@
                 <f:facet name="header">Género</f:facet>
                 #{author.literaryGenre.name}
             </h:column>
-            <!-- Columna para el botón Borrar -->
+            <h:column>
+                <f:facet name="header">Editar</f:facet>
+                <h:commandButton value="Editar" action="#{authorBean.editAuthor(author)}" />
+            </h:column>
             <h:column>
                 <f:facet name="header">Borrar</f:facet>
                 <h:commandButton value="Borrar" action="#{authorBean.deleteAuthor(author)}"

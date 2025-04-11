@@ -5,7 +5,8 @@ import com.example.demo.entity.LiteraryGenre;
 import com.example.demo.model.AuthorModel;
 import com.example.demo.model.LiteraryGenreModel;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.RequestScoped; // se elimina
+import javax.faces.view.ViewScoped;           // usar este import
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @Named
-@RequestScoped
+@ViewScoped // Cambiado a ViewScoped para mantener el estado entre peticiones en la misma vista.
 public class AuthorBean implements Serializable {
 
     @Inject
@@ -22,7 +23,7 @@ public class AuthorBean implements Serializable {
     @Inject
     private LiteraryGenreModel genreModel;
 
-    // Inyectamos el bean de LiteraryGenre para obtener selectedGenreId
+    // Inyectamos el bean de LiteraryGenre para obtener el ID seleccionado
     @Inject
     private LiteraryGenreBean literaryGenreBean;
 
@@ -35,35 +36,55 @@ public class AuthorBean implements Serializable {
         loadAuthors();
     }
 
+    /**
+     * Método para agregar o actualizar un autor.
+     * Si el autor ya tiene ID (ya existe), se actualiza; en caso contrario, se crea.
+     * Se asigna al autor el LiteraryGenre correspondiente usando literaryGenreBean.selectedGenreId.
+     */
     public void addAuthor() {
-        // Establecer la fecha de nacimiento (ejemplo: la fecha actual)
         author.setBirthDate(new Date());
 
-        // Si se seleccionó un género, buscar el objeto LiteraryGenre correspondiente
+        // Se asigna el género literario si se seleccionó alguno.
         if (literaryGenreBean.getSelectedGenreId() != null) {
             LiteraryGenre selectedGenre = genreModel.findGenreById(literaryGenreBean.getSelectedGenreId());
             author.setLiteraryGenre(selectedGenre);
         } else {
-            // En caso de que no se haya seleccionado género, se puede asignar null o manejarlo según la lógica
             author.setLiteraryGenre(null);
         }
 
-        // Persistir el autor y forzar el flush para que se asigne el ID
-        authorModel.createAuthor(author);
+        if (author.getId() == null) {
+            // Autor nuevo: se crea.
+            authorModel.createAuthor(author);
+            message = "Autor agregado correctamente.";
+        } else {
+            // Autor existente: se actualiza.
+            authorModel.updateAuthor(author);
+            message = "Autor actualizado correctamente.";
+        }
         loadAuthors();
-        message = "Autor agregado correctamente.";
         // Reiniciar el formulario
         author = new Author();
+        literaryGenreBean.setSelectedGenreId(null);
     }
 
-    public void updateAuthor() {
-        authorModel.updateAuthor(author);
-        loadAuthors();
-        message = "Autor actualizado correctamente.";
+    /**
+     * Método para editar un autor.
+     * Al hacer clic en "Editar" se copia el autor seleccionado en el bean para que aparezca en el formulario.
+     */
+    public void editAuthor(Author a) {
+        this.author = a;
+        if (a.getLiteraryGenre() != null) {
+            literaryGenreBean.setSelectedGenreId(a.getLiteraryGenre().getId());
+        } else {
+            literaryGenreBean.setSelectedGenreId(null);
+        }
     }
 
-    public void deleteAuthor(Author author) {
-        authorModel.deleteAuthor(author);
+    /**
+     * Método para borrar un autor.
+     */
+    public void deleteAuthor(Author a) {
+        authorModel.deleteAuthor(a);
         loadAuthors();
         message = "Autor eliminado correctamente.";
     }

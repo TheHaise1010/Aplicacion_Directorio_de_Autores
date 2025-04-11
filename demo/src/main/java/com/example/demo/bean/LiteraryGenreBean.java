@@ -16,13 +16,8 @@ public class LiteraryGenreBean implements Serializable {
     @Inject
     private LiteraryGenreModel genreModel;
 
-    // Objeto para agregar un nuevo género (opcional)
     private LiteraryGenre genre = new LiteraryGenre();
-
-    // Lista de géneros
     private List<LiteraryGenre> genres;
-
-    // Mensaje
     private String message;
 
     // Propiedad para la selección en el dropdown (almacena el ID del género)

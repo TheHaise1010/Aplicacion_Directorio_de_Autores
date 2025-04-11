@@ -11,6 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="36beed63-a83d-4c62-b3ec-a780fdc018e2" name="Changes" comment="authorliterarygenre entity, bean and model added.&#10;&#10;LiteraryGenreConverter added under converter package. &#10;&#10;index.xhtml saves and shows associations">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/bean/AuthorBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/bean/AuthorBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/bean/LiteraryGenreBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/bean/LiteraryGenreBean.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/index.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.xhtml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -256,7 +258,7 @@
       <workItem from="1738865284873" duration="4355000" />
       <workItem from="1738894568631" duration="716000" />
       <workItem from="1738955911260" duration="4747000" />
-      <workItem from="1744408716396" duration="5953000" />
+      <workItem from="1744408716396" duration="6798000" />
     </task>
     <task id="LOCAL-00001" summary="First commit, add author and list author works.">
       <option name="closed" value="true" />
