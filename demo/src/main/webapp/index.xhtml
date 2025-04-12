@@ -3,50 +3,72 @@
 <html
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:f="http://xmlns.jcp.org/jsf/core">
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
 <h:head>
     <title>Gestión de Autores y Géneros Literarios</title>
+    <!-- Referencia a una hoja de estilos externa -->
+    <!-- También puedes agregar estilos en línea -->
+    <style type="text/css">
+        .titulo {
+            color: #2a7ab8;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .boton-personalizado {
+            background-color: #2a7ab8;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .boton-personalizado:hover {
+            background-color: #1b5e8a;
+        }
+    </style>
 </h:head>
 <h:body>
-    <h1>Agregar/Editar Autor</h1>
+    <h1 class="titulo">Agregar/Editar Autor</h1>
 
     <h:form id="authorForm">
         <h:panelGrid columns="2">
-            <h:outputLabel for="firstName" value="Nombre:" />
-            <h:inputText id="firstName" value="#{authorBean.author.firstName}" required="true" />
+            <h:outputLabel for="firstName" value="Nombre:"/>
+            <h:inputText id="firstName" value="#{authorBean.author.firstName}" required="true"/>
 
-            <h:outputLabel for="lastName" value="Apellido:" />
-            <h:inputText id="lastName" value="#{authorBean.author.lastName}" required="true" />
+            <h:outputLabel for="lastName" value="Apellido:"/>
+            <h:inputText id="lastName" value="#{authorBean.author.lastName}" required="true"/>
 
-            <h:outputLabel for="birthDate" value="Fecha de Nacimiento:" />
-            <h:inputText id="birthDate" value="#{authorBean.author.birthDate}">
-                <f:convertDateTime pattern="yyyy-MM-dd" />
-            </h:inputText>
+            <h:outputLabel for="birthDate" value="Fecha de Nacimiento:"/>
+            <p:datePicker id="birthDate"
+                          value="#{authorBean.author.birthDate}"
+                          pattern="yyyy-MM-dd" yearRange="1950:2020"
+                          monthNavigator="true" yearNavigator="true" showWeek="true"
+            />
 
-            <h:outputLabel for="phone" value="Teléfono:" />
-            <h:inputText id="phone" value="#{authorBean.author.phone}" />
+            <h:outputLabel for="phone" value="Teléfono:"/>
+            <h:inputText id="phone" value="#{authorBean.author.phone}"/>
 
-            <h:outputLabel for="email" value="Email:" />
-            <h:inputText id="email" value="#{authorBean.author.email}" />
+            <h:outputLabel for="email" value="Email:"/>
+            <h:inputText id="email" value="#{authorBean.author.email}"/>
 
-            <!-- Dropdown para seleccionar género literario -->
-            <h:outputLabel for="genre" value="Género literario:" />
+            <h:outputLabel for="genre" value="Género literario:"/>
             <h:selectOneMenu id="genre" value="#{literaryGenreBean.selectedGenreId}">
-                <f:selectItem itemLabel="Seleccione un género" itemValue="#{null}" />
+                <f:selectItem itemLabel="Seleccione un género" itemValue="#{null}"/>
                 <f:selectItems value="#{literaryGenreBean.genres}"
                                var="genre"
                                itemValue="#{genre.id}"
-                               itemLabel="#{genre.name}" />
+                               itemLabel="#{genre.name}"/>
             </h:selectOneMenu>
         </h:panelGrid>
-        <h:commandButton value="Guardar" action="#{authorBean.addAuthor}" />
+        <h:commandButton value="Guardar" action="#{authorBean.addAuthor}" styleClass="boton-personalizado"/>
     </h:form>
 
-    <!-- Mensaje -->
     <h:outputText value="#{authorBean.message}" rendered="#{not empty authorBean.message}"
-                  style="color: green; font-weight: bold;" />
+                  style="color: green; font-weight: bold;"/>
 
-    <h1>Listado de Autores</h1>
+    <h1 class="titulo">Listado de Autores</h1>
 
     <h:form id="listForm">
         <h:dataTable value="#{authorBean.authors}" var="author" border="1">
@@ -61,7 +83,7 @@
             <h:column>
                 <f:facet name="header">Fecha de Nacimiento</f:facet>
                 <h:outputText value="#{author.birthDate}">
-                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                    <f:convertDateTime pattern="yyyy-MM-dd"/>
                 </h:outputText>
             </h:column>
             <h:column>
@@ -74,12 +96,14 @@
             </h:column>
             <h:column>
                 <f:facet name="header">Editar</f:facet>
-                <h:commandButton value="Editar" action="#{authorBean.editAuthor(author)}" />
+                <h:commandButton value="Editar" action="#{authorBean.editAuthor(author)}"
+                                 styleClass="boton-personalizado"/>
             </h:column>
             <h:column>
                 <f:facet name="header">Borrar</f:facet>
                 <h:commandButton value="Borrar" action="#{authorBean.deleteAuthor(author)}"
-                                 onclick="if (!confirm('¿Está seguro de borrar este autor?')) return false;" />
+                                 onclick="if (!confirm('¿Está seguro de borrar este autor?')) return false;"
+                                 styleClass="boton-personalizado"/>
             </h:column>
         </h:dataTable>
     </h:form>
