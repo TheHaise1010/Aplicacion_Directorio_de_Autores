@@ -12,7 +12,6 @@
     <list default="true" id="36beed63-a83d-4c62-b3ec-a780fdc018e2" name="Changes" comment="authorliterarygenre entity, bean and model added.&#10;&#10;LiteraryGenreConverter added under converter package. &#10;&#10;index.xhtml saves and shows associations">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/bean/AuthorBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/bean/AuthorBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/bean/LiteraryGenreBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/bean/LiteraryGenreBean.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/index.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.xhtml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -73,6 +72,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "master",
+    "idea.background.editor": "C:\\Users\\jorda\\Pictures\\wallhaven-vg9dol.jpg,5,scale,center",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/jorda/Desktop/Aplicacion_Directorio_de_Autores/demo",
@@ -81,7 +81,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -258,7 +258,7 @@
       <workItem from="1738865284873" duration="4355000" />
       <workItem from="1738894568631" duration="716000" />
       <workItem from="1738955911260" duration="4747000" />
-      <workItem from="1744408716396" duration="6798000" />
+      <workItem from="1744408716396" duration="7413000" />
     </task>
     <task id="LOCAL-00001" summary="First commit, add author and list author works.">
       <option name="closed" value="true" />

@@ -18,6 +18,11 @@
             <h:outputLabel for="lastName" value="Apellido:" />
             <h:inputText id="lastName" value="#{authorBean.author.lastName}" required="true" />
 
+            <h:outputLabel for="birthDate" value="Fecha de Nacimiento:" />
+            <h:inputText id="birthDate" value="#{authorBean.author.birthDate}">
+                <f:convertDateTime pattern="yyyy-MM-dd" />
+            </h:inputText>
+
             <h:outputLabel for="phone" value="Teléfono:" />
             <h:inputText id="phone" value="#{authorBean.author.phone}" />
 
@@ -37,7 +42,7 @@
         <h:commandButton value="Guardar" action="#{authorBean.addAuthor}" />
     </h:form>
 
-    <!-- Mensaje de confirmación o error -->
+    <!-- Mensaje -->
     <h:outputText value="#{authorBean.message}" rendered="#{not empty authorBean.message}"
                   style="color: green; font-weight: bold;" />
 
@@ -52,6 +57,12 @@
             <h:column>
                 <f:facet name="header">Nombre</f:facet>
                 #{author.firstName} #{author.lastName}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha de Nacimiento</f:facet>
+                <h:outputText value="#{author.birthDate}">
+                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                </h:outputText>
             </h:column>
             <h:column>
                 <f:facet name="header">Email</f:facet>

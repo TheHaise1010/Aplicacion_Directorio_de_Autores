@@ -5,16 +5,14 @@ import com.example.demo.entity.LiteraryGenre;
 import com.example.demo.model.AuthorModel;
 import com.example.demo.model.LiteraryGenreModel;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped; // se elimina
-import javax.faces.view.ViewScoped;           // usar este import
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 @Named
-@ViewScoped // Cambiado a ViewScoped para mantener el estado entre peticiones en la misma vista.
+@ViewScoped  // Se utiliza ViewScoped para mantener el estado entre peticiones en la misma vista.
 public class AuthorBean implements Serializable {
 
     @Inject
@@ -38,13 +36,15 @@ public class AuthorBean implements Serializable {
 
     /**
      * Método para agregar o actualizar un autor.
-     * Si el autor ya tiene ID (ya existe), se actualiza; en caso contrario, se crea.
+     * Se utiliza el valor ingresado por el usuario para la fecha de nacimiento (birthDate)
+     * en lugar de asignar la fecha actual.
      * Se asigna al autor el LiteraryGenre correspondiente usando literaryGenreBean.selectedGenreId.
      */
     public void addAuthor() {
-        author.setBirthDate(new Date());
+        // NOTA: Se elimina author.setBirthDate(new Date());
+        // La fecha de nacimiento se toma del formulario (ingresada por el usuario)
 
-        // Se asigna el género literario si se seleccionó alguno.
+        // Asignar el género literario si se ha seleccionado (verificamos que selectedGenreId no sea null)
         if (literaryGenreBean.getSelectedGenreId() != null) {
             LiteraryGenre selectedGenre = genreModel.findGenreById(literaryGenreBean.getSelectedGenreId());
             author.setLiteraryGenre(selectedGenre);
