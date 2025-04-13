@@ -107,5 +107,12 @@
             </h:column>
         </h:dataTable>
     </h:form>
+    <br></br>
+    <!-- Panel para mostrar el número de autores y botón "Contar" -->
+    <div class="mt-3">
+        <h:panelGroup id="autorCount">
+            <h:outputText value="Número de autores: #{authorBean.authors.size()}" class="font-weight-bold" />
+        </h:panelGroup>
+    </div>
 </h:body>
 </html>

@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Named
-@ViewScoped  // Se utiliza ViewScoped para mantener el estado entre peticiones en la misma vista.
+@ViewScoped
 public class AuthorBean implements Serializable {
 
     @Inject
@@ -21,7 +21,7 @@ public class AuthorBean implements Serializable {
     @Inject
     private LiteraryGenreModel genreModel;
 
-    // Inyectamos el bean de LiteraryGenre para obtener el ID seleccionado
+    // Inyectamos el bean LiteraryGenreBean para obtener el ID seleccionado
     @Inject
     private LiteraryGenreBean literaryGenreBean;
 
@@ -36,15 +36,11 @@ public class AuthorBean implements Serializable {
 
     /**
      * Método para agregar o actualizar un autor.
-     * Se utiliza el valor ingresado por el usuario para la fecha de nacimiento (birthDate)
-     * en lugar de asignar la fecha actual.
-     * Se asigna al autor el LiteraryGenre correspondiente usando literaryGenreBean.selectedGenreId.
+     * Se asigna el LiteraryGenre correspondiente usando literaryGenreBean.selectedGenreId
+     * y se toma el birthday ingresado por el usuario en el formulario.
      */
     public void addAuthor() {
-        // NOTA: Se elimina author.setBirthDate(new Date());
-        // La fecha de nacimiento se toma del formulario (ingresada por el usuario)
-
-        // Asignar el género literario si se ha seleccionado (verificamos que selectedGenreId no sea null)
+        // Se asigna el género literario, si se ha seleccionado uno.
         if (literaryGenreBean.getSelectedGenreId() != null) {
             LiteraryGenre selectedGenre = genreModel.findGenreById(literaryGenreBean.getSelectedGenreId());
             author.setLiteraryGenre(selectedGenre);
@@ -53,11 +49,11 @@ public class AuthorBean implements Serializable {
         }
 
         if (author.getId() == null) {
-            // Autor nuevo: se crea.
+            // Autor nuevo
             authorModel.createAuthor(author);
             message = "Autor agregado correctamente.";
         } else {
-            // Autor existente: se actualiza.
+            // Autor existente: se actualiza
             authorModel.updateAuthor(author);
             message = "Autor actualizado correctamente.";
         }
@@ -68,8 +64,8 @@ public class AuthorBean implements Serializable {
     }
 
     /**
-     * Método para editar un autor.
-     * Al hacer clic en "Editar" se copia el autor seleccionado en el bean para que aparezca en el formulario.
+     * Método que se invoca para editar un autor.
+     * Copia el autor seleccionado en el bean y asigna el ID del género al LiteraryGenreBean.
      */
     public void editAuthor(Author a) {
         this.author = a;
@@ -89,11 +85,16 @@ public class AuthorBean implements Serializable {
         message = "Autor eliminado correctamente.";
     }
 
+    /**
+     * Método para recargar la lista de autores.
+     */
+
     private void loadAuthors() {
         authors = authorModel.getAllAuthors();
     }
 
     // Getters y Setters
+
     public Author getAuthor() {
         return author;
     }
