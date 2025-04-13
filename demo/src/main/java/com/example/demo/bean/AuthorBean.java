@@ -21,7 +21,7 @@ public class AuthorBean implements Serializable {
     @Inject
     private LiteraryGenreModel genreModel;
 
-    // Inyectamos el bean LiteraryGenreBean para obtener el ID seleccionado
+    // Bean para acceder al género literario seleccionado
     @Inject
     private LiteraryGenreBean literaryGenreBean;
 
@@ -34,13 +34,8 @@ public class AuthorBean implements Serializable {
         loadAuthors();
     }
 
-    /**
-     * Método para agregar o actualizar un autor.
-     * Se asigna el LiteraryGenre correspondiente usando literaryGenreBean.selectedGenreId
-     * y se toma el birthday ingresado por el usuario en el formulario.
-     */
     public void addAuthor() {
-        // Se asigna el género literario, si se ha seleccionado uno.
+        // Se asigna el género literario si existe selección
         if (literaryGenreBean.getSelectedGenreId() != null) {
             LiteraryGenre selectedGenre = genreModel.findGenreById(literaryGenreBean.getSelectedGenreId());
             author.setLiteraryGenre(selectedGenre);
@@ -49,11 +44,9 @@ public class AuthorBean implements Serializable {
         }
 
         if (author.getId() == null) {
-            // Autor nuevo
             authorModel.createAuthor(author);
             message = "Autor agregado correctamente.";
         } else {
-            // Autor existente: se actualiza
             authorModel.updateAuthor(author);
             message = "Autor actualizado correctamente.";
         }
@@ -63,10 +56,10 @@ public class AuthorBean implements Serializable {
         literaryGenreBean.setSelectedGenreId(null);
     }
 
-    /**
-     * Método que se invoca para editar un autor.
-     * Copia el autor seleccionado en el bean y asigna el ID del género al LiteraryGenreBean.
-     */
+    private void loadAuthors() {
+        authors = authorModel.getAllAuthors();
+    }
+
     public void editAuthor(Author a) {
         this.author = a;
         if (a.getLiteraryGenre() != null) {
@@ -76,25 +69,17 @@ public class AuthorBean implements Serializable {
         }
     }
 
-    /**
-     * Método para borrar un autor.
-     */
     public void deleteAuthor(Author a) {
         authorModel.deleteAuthor(a);
         loadAuthors();
         message = "Autor eliminado correctamente.";
     }
 
-    /**
-     * Método para recargar la lista de autores.
-     */
-
-    private void loadAuthors() {
-        authors = authorModel.getAllAuthors();
+    public void contarAutores() {
+        loadAuthors();
     }
 
-    // Getters y Setters
-
+    // Getters and Setters
     public Author getAuthor() {
         return author;
     }
