@@ -27,10 +27,10 @@
         <h:form id="authorForm">
             <h:panelGrid columns="2" styleClass="form-group">
                 <h:outputLabel for="firstName" value="Nombre:" styleClass="font-weight-bold" />
-                <h:inputText id="firstName" value="#{authorBean.author.firstName}" required="true" styleClass="form-control" />
+                <h:inputText id="firstName" value="#{authorBean.author.firstName}" styleClass="form-control" />
 
                 <h:outputLabel for="lastName" value="Apellido:" styleClass="font-weight-bold" />
-                <h:inputText id="lastName" value="#{authorBean.author.lastName}" required="true" styleClass="form-control" />
+                <h:inputText id="lastName" value="#{authorBean.author.lastName}" styleClass="form-control" />
 
                 <h:outputLabel for="birthDate" value="Fecha de Nacimiento:" styleClass="font-weight-bold" />
                 <p:datePicker id="birthDate"
@@ -59,12 +59,14 @@
             <br></br>
             <h:commandButton value="Guardar" action="#{authorBean.addAuthor}" styleClass="btn btn-primary boton-personalizado" />
         </h:form>
+        <br></br>
+        <h:outputText value="#{authorBean.message}" escape="false"/>
 
         <h1 class="titulo">Listado de Autores</h1>
 
         <h:form id="listForm">
             <h:dataTable value="#{authorBean.authors}" var="author">
-        <h:column>
+                <h:column>
                     <f:facet name="header">ID</f:facet>
                     #{author.id}
                 </h:column>

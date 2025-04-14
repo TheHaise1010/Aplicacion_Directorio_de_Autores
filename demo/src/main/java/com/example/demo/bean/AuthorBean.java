@@ -9,6 +9,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Named
@@ -35,12 +36,52 @@ public class AuthorBean implements Serializable {
     }
 
     public void addAuthor() {
+        StringBuilder errorMessage = new StringBuilder();
+        boolean hasErrors = false;
+
+        if (author == null) {
+            author = new Author();
+            errorMessage.append("No autor seteado<br></br>");
+            hasErrors = true;
+        }
+
+        if (author.getFirstName() == null || author.getFirstName().trim().isEmpty()) {
+            errorMessage.append("El campo Primer nombre está vacío<br></br>");
+            hasErrors = true;
+        }
+
+        if (author.getLastName() == null || author.getLastName().trim().isEmpty()) {
+            errorMessage.append("El campo Apellido está vacío<br></br>");
+            hasErrors = true;
+        }
+
+        if (author.getBirthDate() == null) {
+            errorMessage.append("El campo Fecha de nacimiento está vacío<br></br>");
+            hasErrors = true;
+        }
+
+        if (author.getPhone() == null || author.getPhone().trim().isEmpty()) {
+            errorMessage.append("El campo Teléfono está vacío<br></br>");
+            hasErrors = true;
+        }
+
+        if (author.getEmail() == null || author.getEmail().trim().isEmpty()) {
+            errorMessage.append("El campo Email está vacío<br></br>");
+            hasErrors = true;
+        }
+
         // Se asigna el género literario si existe selección
-        if (literaryGenreBean.getSelectedGenreId() != null) {
+        if (literaryGenreBean.getSelectedGenreId() == null) {
+            errorMessage.append("El campo Genero literario está vacío<br></br>");
+            hasErrors = true;
+        } else {
             LiteraryGenre selectedGenre = genreModel.findGenreById(literaryGenreBean.getSelectedGenreId());
             author.setLiteraryGenre(selectedGenre);
-        } else {
-            author.setLiteraryGenre(null);
+        }
+
+        if (hasErrors) {
+            setMessage(errorMessage.toString());
+            return;
         }
 
         if (author.getId() == null) {
@@ -51,7 +92,7 @@ public class AuthorBean implements Serializable {
             message = "Autor actualizado correctamente.";
         }
         loadAuthors();
-        // Reiniciar el formulario
+        // Reiniciar el formulario solo si la operación fue exitosa
         author = new Author();
         literaryGenreBean.setSelectedGenreId(null);
     }
