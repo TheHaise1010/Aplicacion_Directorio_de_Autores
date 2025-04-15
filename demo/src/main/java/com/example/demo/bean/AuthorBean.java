@@ -10,8 +10,13 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Named
 @ViewScoped
@@ -40,54 +45,99 @@ public class AuthorBean implements Serializable {
         StringBuilder errorMessage = new StringBuilder();
         boolean hasErrors = false;
 
+        // 1. Validaciones para Primer Nombre
         if (author.getFirstName() == null || author.getFirstName().trim().isEmpty()) {
             errorMessage.append("El campo Primer nombre está vacío<br></br>");
             hasErrors = true;
+        } else if (author.getFirstName().trim().length() > 15) {
+            errorMessage.append("El campo Primer nombre no debe tener más de 15 caracteres<br></br>");
+            hasErrors = true;
+        } else if (!author.getFirstName().trim().matches("^[a-zA-Z]+$")) {
+            errorMessage.append("El campo Primer nombre debe contener solo letras<br></br>");
+            hasErrors = true;
         }
 
+        // 1. Validaciones para Apellido
         if (author.getLastName() == null || author.getLastName().trim().isEmpty()) {
             errorMessage.append("El campo Apellido está vacío<br></br>");
             hasErrors = true;
-        }
-
-        if (author.getBirthDate() == null) {
-            errorMessage.append("El campo Fecha de nacimiento está vacío<br></br>");
+        } else if (author.getLastName().trim().length() > 15) {
+            errorMessage.append("El campo Apellido no debe tener más de 15 caracteres<br></br>");
+            hasErrors = true;
+        } else if (!author.getLastName().trim().matches("^[a-zA-Z]+$")) {
+            errorMessage.append("El campo Apellido debe contener solo letras<br></br>");
             hasErrors = true;
         }
 
-        if (author.getPhone() == null || author.getPhone().trim().isEmpty()) {
+        // 2. Validación para Fecha de Nacimiento
+        if (author.getBirthDate() == null) {
+            errorMessage.append("El campo Fecha de nacimiento está vacío<br></br>");
+            hasErrors = true;
+        } else {
+            LocalDate birthLocalDate = author.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate eighteenYearsAgo = LocalDate.now().minusYears(18);
+            if (birthLocalDate.isAfter(eighteenYearsAgo)) {
+                errorMessage.append("La fecha de nacimiento debe ser hace 18 años o más<br></br>");
+                hasErrors = true;
+            }
+        }
+
+        // 3. Validación para Teléfono
+        if (author.getPhone() != null && !author.getPhone().trim().isEmpty()) {
+            if (!author.getPhone().trim().matches("^[0-9]{8}$")) {
+                errorMessage.append("El campo Teléfono debe contener exactamente 8 caracteres numéricos<br></br>");
+                hasErrors = true;
+            }
+        } else if (author.getPhone() == null || author.getPhone().trim().isEmpty()) {
             errorMessage.append("El campo Teléfono está vacío<br></br>");
             hasErrors = true;
         }
 
-        if (author.getEmail() == null || author.getEmail().trim().isEmpty()) {
+        // 4. Validación para Email
+        if (author.getEmail() != null && !author.getEmail().trim().isEmpty()) {
+            if (author.getEmail().trim().length() > 50) {
+                errorMessage.append("El campo Email no debe exceder los 50 caracteres<br></br>");
+                hasErrors = true;
+            } else {
+                Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+                Matcher matcher = pattern.matcher(author.getEmail().trim());
+                if (!matcher.matches()) {
+                    errorMessage.append("El campo Email tiene un formato inválido<br></br>");
+                    hasErrors = true;
+                }
+            }
+        } else if (author.getEmail() == null || author.getEmail().trim().isEmpty()) {
             errorMessage.append("El campo Email está vacío<br></br>");
             hasErrors = true;
         }
 
-        // Se asigna el género literario si existe selección
-        if (literaryGenreBean.getSelectedGenreId() == null) {
+        // Validación para Género Literario
+        Integer selectedGenreId = literaryGenreBean.getSelectedGenreId();
+        if (selectedGenreId == null) {
             errorMessage.append("El campo Genero literario está vacío<br></br>");
             hasErrors = true;
-        } else {
-            LiteraryGenre selectedGenre = genreModel.findGenreById(literaryGenreBean.getSelectedGenreId());
-            author.setLiteraryGenre(selectedGenre);
         }
 
         if (hasErrors) {
             setMessage(errorMessage.toString());
             return;
-        }else{
+        } else {
+            LiteraryGenre selectedGenre = null;
+            if (selectedGenreId != null) {
+                selectedGenre = genreModel.findGenreById(selectedGenreId);
+                author.setLiteraryGenre(selectedGenre);
+            } else {
+                author.setLiteraryGenre(null);
+            }
+
             if (author.getId() == null) {
                 authorModel.createAuthor(author);
                 message = "Autor agregado correctamente.";
-
             } else {
                 authorModel.updateAuthor(author);
                 message = "Autor actualizado correctamente.";
             }
             loadAuthors();
-            // Reiniciar el formulario solo si la operación fue exitosa
             author = new Author();
             literaryGenreBean.setSelectedGenreId(null);
         }
@@ -98,7 +148,7 @@ public class AuthorBean implements Serializable {
     }
 
     public void editAuthor(Author a) {
-        this.author = new Author(); // Crear una nueva instancia para la edición
+        this.author = new Author();
         this.author.setId(a.getId());
         this.author.setFirstName(a.getFirstName());
         this.author.setLastName(a.getLastName());
@@ -112,7 +162,6 @@ public class AuthorBean implements Serializable {
         } else {
             literaryGenreBean.setSelectedGenreId(null);
         }
-        // Ya no es necesario llamar a loadAuthors aquí
     }
 
     public void deleteAuthor(Author a) {
