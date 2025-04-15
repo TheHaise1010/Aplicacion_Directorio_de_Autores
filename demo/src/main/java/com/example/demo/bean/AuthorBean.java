@@ -4,6 +4,7 @@ import com.example.demo.entity.Author;
 import com.example.demo.entity.LiteraryGenre;
 import com.example.demo.model.AuthorModel;
 import com.example.demo.model.LiteraryGenreModel;
+
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -38,12 +39,6 @@ public class AuthorBean implements Serializable {
     public void addAuthor() {
         StringBuilder errorMessage = new StringBuilder();
         boolean hasErrors = false;
-
-        if (author == null) {
-            author = new Author();
-            errorMessage.append("No autor seteado<br></br>");
-            hasErrors = true;
-        }
 
         if (author.getFirstName() == null || author.getFirstName().trim().isEmpty()) {
             errorMessage.append("El campo Primer nombre está vacío<br></br>");
@@ -82,19 +77,20 @@ public class AuthorBean implements Serializable {
         if (hasErrors) {
             setMessage(errorMessage.toString());
             return;
-        }
+        }else{
+            if (author.getId() == null) {
+                authorModel.createAuthor(author);
+                message = "Autor agregado correctamente.";
 
-        if (author.getId() == null) {
-            authorModel.createAuthor(author);
-            message = "Autor agregado correctamente.";
-        } else {
-            authorModel.updateAuthor(author);
-            message = "Autor actualizado correctamente.";
+            } else {
+                authorModel.updateAuthor(author);
+                message = "Autor actualizado correctamente.";
+            }
+            loadAuthors();
+            // Reiniciar el formulario solo si la operación fue exitosa
+            author = new Author();
+            literaryGenreBean.setSelectedGenreId(null);
         }
-        loadAuthors();
-        // Reiniciar el formulario solo si la operación fue exitosa
-        author = new Author();
-        literaryGenreBean.setSelectedGenreId(null);
     }
 
     private void loadAuthors() {
@@ -102,12 +98,21 @@ public class AuthorBean implements Serializable {
     }
 
     public void editAuthor(Author a) {
-        this.author = a;
+        this.author = new Author(); // Crear una nueva instancia para la edición
+        this.author.setId(a.getId());
+        this.author.setFirstName(a.getFirstName());
+        this.author.setLastName(a.getLastName());
+        this.author.setBirthDate(a.getBirthDate());
+        this.author.setPhone(a.getPhone());
+        this.author.setEmail(a.getEmail());
+        this.author.setLiteraryGenre(a.getLiteraryGenre());
+
         if (a.getLiteraryGenre() != null) {
             literaryGenreBean.setSelectedGenreId(a.getLiteraryGenre().getId());
         } else {
             literaryGenreBean.setSelectedGenreId(null);
         }
+        // Ya no es necesario llamar a loadAuthors aquí
     }
 
     public void deleteAuthor(Author a) {
