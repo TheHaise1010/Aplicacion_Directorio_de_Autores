@@ -17,10 +17,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 
 @Named
 @ViewScoped
 public class AuthorBean implements Serializable {
+
+    private Integer selectedGenreFilterId;
+    private List<Author> filteredAuthors;
 
     @Inject
     private AuthorModel authorModel;
@@ -142,9 +147,22 @@ public class AuthorBean implements Serializable {
             literaryGenreBean.setSelectedGenreId(null);
         }
     }
+    public void applyGenreFilter() {
+        if (selectedGenreFilterId == null) {
+            filteredAuthors = authors;
+        } else {
+            filteredAuthors = authors.stream()
+                    .filter(a -> a.getLiteraryGenre() != null &&
+                            a.getLiteraryGenre().getId().equals(selectedGenreFilterId))
+                    .collect(Collectors.toList());
+
+        }
+    }
+
 
     private void loadAuthors() {
         authors = authorModel.getAllAuthors();
+        applyGenreFilter(); // filtra la lista inicial también
     }
 
     public void editAuthor(Author a) {
@@ -198,4 +216,17 @@ public class AuthorBean implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public List<Author> getFilteredAuthors() {
+        return filteredAuthors;
+    }
+
+    public Integer getSelectedGenreFilterId() {
+        return selectedGenreFilterId;
+    }
+
+    public void setSelectedGenreFilterId(Integer selectedGenreFilterId) {
+        this.selectedGenreFilterId = selectedGenreFilterId;
+    }
+
 }

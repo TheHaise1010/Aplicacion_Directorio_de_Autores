@@ -60,12 +60,29 @@
             <h:commandButton value="Guardar" action="#{authorBean.addAuthor}" styleClass="btn btn-primary boton-personalizado" />
         </h:form>
         <br></br>
-        <h:outputText value="#{authorBean.message}" escape="false"/>
+
+        <div style="background-color: #d3d3d3; width: 400px; min-height: 50px; color: black; font-weight: bold; padding: 10px; box-sizing: border-box;">
+            <h:outputText value="#{authorBean.message}" escape="false"/>
+        </div>
+        <br></br>
+        <h:form>
+            <h:panelGrid columns="2" style="margin-bottom: 10px;">
+                <h:outputLabel value="Filtrar por género literario:" />
+                <h:selectOneMenu value="#{authorBean.selectedGenreFilterId}">
+                    <f:selectItem itemLabel="Todos" itemValue="#{null}" />
+                    <f:selectItems value="#{literaryGenreBean.genres}"
+                                   var="g"
+                                   itemValue="#{g.id}"
+                                   itemLabel="#{g.name}" />
+                    <f:ajax listener="#{authorBean.applyGenreFilter}" render="listForm autorCount" />
+                </h:selectOneMenu>
+            </h:panelGrid>
+        </h:form>
 
         <h1 class="titulo">Listado de Autores</h1>
 
         <h:form id="listForm">
-            <h:dataTable value="#{authorBean.authors}" var="author">
+            <h:dataTable value="#{authorBean.filteredAuthors}" var="author">
                 <h:column>
                     <f:facet name="header">ID</f:facet>
                     #{author.id}
