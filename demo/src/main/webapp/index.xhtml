@@ -7,7 +7,6 @@
         xmlns:p="http://primefaces.org/ui">
 <h:head>
     <title>Gestión de Autores y Géneros Literarios</title>
-    <!-- Referencia a Bootstrap desde CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+" crossorigin="anonymous" />
     <style>
@@ -65,18 +64,21 @@
             <h:outputText value="#{authorBean.message}" escape="false"/>
         </div>
         <br></br>
-        <h:form>
+        <h:form id="filterForm">
             <h:panelGrid columns="2" style="margin-bottom: 10px;">
                 <h:outputLabel value="Filtrar por género literario:" />
-                <h:selectOneMenu value="#{authorBean.selectedGenreFilterId}">
+                <h:selectOneMenu value="#{authorBean.selectedGenreFilterId}" styleClass="form-control">
                     <f:selectItem itemLabel="Todos" itemValue="#{null}" />
-                    <f:selectItems value="#{literaryGenreBean.genres}"
-                                   var="g"
-                                   itemValue="#{g.id}"
-                                   itemLabel="#{g.name}" />
+                    <f:selectItems value="#{authorBean.usedGenres}"
+                                   var="genre"
+                                   itemValue="#{genre.id}"
+                                   itemLabel="#{genre.name}" />
                     <f:ajax listener="#{authorBean.applyGenreFilter}" render="listForm autorCount" />
                 </h:selectOneMenu>
             </h:panelGrid>
+            <h:panelGroup id="autorCount">
+                <h:outputText value="Número de autores: #{authorBean.filteredAuthors.size()}" styleClass="font-weight-bold" />
+            </h:panelGroup>
         </h:form>
 
         <h1 class="titulo">Listado de Autores</h1>
@@ -122,12 +124,5 @@
             </h:dataTable>
         </h:form>
         <br></br>
-        <h:form>
-            <h:panelGroup id="autorCount">
-                <h:outputText value="Número de autores: #{authorBean.authors.size()}" styleClass="font-weight-bold" />
-            </h:panelGroup>
-        </h:form>
-
-    </div> <!-- /.container -->
-</h:body>
+    </div> </h:body>
 </html>

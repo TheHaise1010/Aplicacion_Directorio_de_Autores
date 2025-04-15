@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.Set;
 
 
 @Named
@@ -147,6 +148,21 @@ public class AuthorBean implements Serializable {
             literaryGenreBean.setSelectedGenreId(null);
         }
     }
+
+    public List<LiteraryGenre> getUsedGenres() {
+        // Por si acaso, asegurarnos de tener la lista de autores cargada.
+        if (authors == null) {
+            loadAuthors();
+        }
+        // Usar un Set para eliminar duplicados y no tener géneros nulos
+        Set<LiteraryGenre> used = authors.stream()
+                .map(Author::getLiteraryGenre)   // Obtener el género de cada autor
+                .filter(g -> g != null)          // Quitar nulos
+                .collect(Collectors.toSet());    // Convertir a set
+
+        // Retornar como lista
+        return used.stream().collect(Collectors.toList());
+    }
     public void applyGenreFilter() {
         if (selectedGenreFilterId == null) {
             filteredAuthors = authors;
@@ -184,6 +200,7 @@ public class AuthorBean implements Serializable {
 
     public void deleteAuthor(Author a) {
         authorModel.deleteAuthor(a);
+        this.author = new Author();
         loadAuthors();
         message = "Autor eliminado correctamente.";
     }
